@@ -10,7 +10,7 @@ jobs:
   test-gdelt:
     runs-on: ubuntu-latest
     steps:
-      - name: Download and filter latest GDELT events
+      - name: Download, filter and deduplicate latest GDELT events
         shell: bash
         run: |
           set -euo pipefail
@@ -31,12 +31,16 @@ jobs:
           unzip -p events.zip > events.tsv
           echo "All GDELT rows: $(wc -l < events.tsv)"
 
-          # GDELT EventRootCode 18=ASSAULT, 19=FIGHT, 20=USE UNCONVENTIONAL MASS VIOLENCE.
-          # Start conservatively with these direct-violence families.
           awk -F '\t' 'BEGIN {OFS="\t"} $29=="18" || $29=="19" || $29=="20" {print}' events.tsv > conflict.tsv
-
           echo "Conflict rows: $(wc -l < conflict.tsv)"
-          echo "Sample conflict events:"
-          awk -F '\t' 'BEGIN {OFS=" | "} NR<=10 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "RootCode="$29, "QuadClass="$30, "Actor1="$7, "Actor2="$17, "Country="$52, "Lat="$57, "Lng="$58, "SourceURL="$61}' conflict.tsv
 
-          test -s conflict.tsv
+          # One news URL can generate multiple GDELT event rows.
+          # For this first cleanup pass, keep only one row per SourceURL.
+          awk -F '\t' '!seen[$61]++' conflict.tsv > dedup.tsv
+
+          echo "Deduplicated rows: $(wc -l < dedup.tsv)"
+          echo "Duplicates removed: $(( $(wc -l < conflict.tsv) - $(wc -l < dedup.tsv) ))"
+          echo "Sample deduplicated conflict events:"
+          awk -F '\t' 'BEGIN {OFS=" | "} NR<=10 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "RootCode="$29, "QuadClass="$30, "Actor1="$7, "Actor2="$17, "Country="$52, "Lat="$57, "Lng="$58, "SourceURL="$61}' dedup.tsv
+
+          test -s dedup.tsv

@@ -44,7 +44,7 @@ jobs:
           awk -F '\t' 'BEGIN {OFS=" | "} NR<=10 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "RootCode="$29, "QuadClass="$30, "Actor1="$7, "Actor2="$17, "Country="$52, "Lat="$57, "Lng="$58, "SourceURL="$61}' dedup.tsv
 
           test -s dedup.tsv
-                    - name: Upload GDELT events to Supabase
+            - name: Upload GDELT events to Supabase
             shell: bash
             env:
               SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

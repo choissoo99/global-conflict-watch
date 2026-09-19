@@ -1,4 +1,4 @@
-name: Test GDELT Connection
+name: Test GDELT Conflict Filter
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
   test-gdelt:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch latest GDELT event file
+      - name: Download and filter latest GDELT events
         shell: bash
         run: |
           set -euo pipefail
@@ -21,13 +21,7 @@ jobs:
             --output lastupdate.txt
 
           EVENT_URL="$(awk '/export\.CSV\.zip/ {print $3; exit}' lastupdate.txt)"
-          if [ -z "$EVENT_URL" ]; then
-            echo "Could not find latest GDELT event file URL."
-            cat lastupdate.txt
-            exit 1
-          fi
-
-          echo "Latest event file: $EVENT_URL"
+          test -n "$EVENT_URL"
 
           curl --fail --show-error --location --max-time 60 \
             --user-agent "GlobalConflictWatch/1.0" \
@@ -35,9 +29,14 @@ jobs:
             --output events.zip
 
           unzip -p events.zip > events.tsv
+          echo "All GDELT rows: $(wc -l < events.tsv)"
 
-          echo "Rows downloaded: $(wc -l < events.tsv)"
-          echo "First 3 event rows (selected fields):"
-          awk -F '\t' 'BEGIN {OFS=" | "} NR<=3 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "QuadClass="$30, "Lat="$57, "Lng="$58, "SourceURL="$61}' events.tsv
+          # GDELT EventRootCode 18=ASSAULT, 19=FIGHT, 20=USE UNCONVENTIONAL MASS VIOLENCE.
+          # Start conservatively with these direct-violence families.
+          awk -F '\t' 'BEGIN {OFS="\t"} $29=="18" || $29=="19" || $29=="20" {print}' events.tsv > conflict.tsv
 
-          test -s events.tsv
+          echo "Conflict rows: $(wc -l < conflict.tsv)"
+          echo "Sample conflict events:"
+          awk -F '\t' 'BEGIN {OFS=" | "} NR<=10 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "RootCode="$29, "QuadClass="$30, "Actor1="$7, "Actor2="$17, "Country="$52, "Lat="$57, "Lng="$58, "SourceURL="$61}' conflict.tsv
+
+          test -s conflict.tsv

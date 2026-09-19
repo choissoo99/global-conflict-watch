@@ -10,15 +10,34 @@ jobs:
   test-gdelt:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch GDELT lastupdate.txt
+      - name: Fetch latest GDELT event file
         shell: bash
         run: |
           set -euo pipefail
-          echo "Testing GDELT connection..."
+
           curl --fail --show-error --location --max-time 30 \
             --user-agent "GlobalConflictWatch/1.0" \
             "https://data.gdeltproject.org/gdeltv2/lastupdate.txt" \
             --output lastupdate.txt
-          echo "GDELT response:"
-          cat lastupdate.txt
-          test -s lastupdate.txt
+
+          EVENT_URL="$(awk '/export\.CSV\.zip/ {print $3; exit}' lastupdate.txt)"
+          if [ -z "$EVENT_URL" ]; then
+            echo "Could not find latest GDELT event file URL."
+            cat lastupdate.txt
+            exit 1
+          fi
+
+          echo "Latest event file: $EVENT_URL"
+
+          curl --fail --show-error --location --max-time 60 \
+            --user-agent "GlobalConflictWatch/1.0" \
+            "$EVENT_URL" \
+            --output events.zip
+
+          unzip -p events.zip > events.tsv
+
+          echo "Rows downloaded: $(wc -l < events.tsv)"
+          echo "First 3 event rows (selected fields):"
+          awk -F '\t' 'BEGIN {OFS=" | "} NR<=3 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "QuadClass="$30, "Lat="$57, "Lng="$58, "SourceURL="$61}' events.tsv
+
+          test -s events.tsv

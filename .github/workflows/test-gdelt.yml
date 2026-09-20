@@ -44,79 +44,79 @@ jobs:
           awk -F '\t' 'BEGIN {OFS=" | "} NR<=10 {print "GlobalEventID="$1, "Date="$2, "EventCode="$27, "RootCode="$29, "QuadClass="$30, "Actor1="$7, "Actor2="$17, "Country="$52, "Lat="$57, "Lng="$58, "SourceURL="$61}' dedup.tsv
 
           test -s dedup.tsv
-            - name: Upload GDELT events to Supabase
-            shell: bash
-            env:
-              SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-              SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-            run: |
-              set -euo pipefail
-    
-              python3 - <<'PY'
-              import csv
-              import json
-              import os
-              import urllib.request
-    
-              supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
-              service_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-    
-              rows = []
-    
-              with open("dedup.tsv", encoding="utf-8", errors="replace") as f:
-                  reader = csv.reader(f, delimiter="\t")
-    
-                  for r in reader:
-                      if len(r) < 61:
-                          continue
-    
-                      global_event_id = r[0].strip()
-                      event_date = r[1].strip()
-                      event_code = r[26].strip()
-                      source_url = r[60].strip()
-    
-                      if not global_event_id or not source_url:
-                          continue
-    
-                      rows.append({
-                          "source_id": f"gdelt:{global_event_id}",
-                          "source_provider": "GDELT",
-                          "external_id": global_event_id,
-                          "event_type": "ARMED",
-                          "title": f"GDELT conflict event {global_event_id}",
-                          "summary": f"GDELT event code {event_code}",
-                          "event_time": (
-                              f"{event_date[:4]}-{event_date[4:6]}-{event_date[6:8]}T00:00:00Z"
-                              if len(event_date) == 8 else None
-                          ),
-                          "fatalities": 0,
-                          "injuries": 0,
-                          "source_name": "GDELT",
-                          "source_url": source_url,
-                          "source_count": 1,
-                          "confidence": 30,
-                          "status": "unverified"
-                      })
-    
-              if not rows:
-                  raise SystemExit("No GDELT rows to upload")
-    
-              data = json.dumps(rows).encode("utf-8")
-    
-              req = urllib.request.Request(
-                  supabase_url + "/rest/v1/events?on_conflict=source_id",
-                  data=data,
-                  method="POST",
-                  headers={
-                      "apikey": service_key,
-                      "Authorization": "Bearer " + service_key,
-                      "Content-Type": "application/json",
-                      "Prefer": "resolution=ignore-duplicates,return=minimal"
-                  }
-              )
-    
-              with urllib.request.urlopen(req, timeout=30) as response:
-                  print("Supabase status:", response.status)
-    
-              print("GDELT rows submitted:", len(rows))
-              PY
+      - name: Upload GDELT events to Supabase
+              shell: bash
+              env:
+                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+              run: |
+                set -euo pipefail
+      
+                python3 - <<'PY'
+                import csv
+                import json
+                import os
+                import urllib.request
+      
+                supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+                service_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+      
+                rows = []
+      
+                with open("dedup.tsv", encoding="utf-8", errors="replace") as f:
+                    reader = csv.reader(f, delimiter="\t")
+      
+                    for r in reader:
+                        if len(r) < 61:
+                            continue
+      
+                        global_event_id = r[0].strip()
+                        event_date = r[1].strip()
+                        event_code = r[26].strip()
+                        source_url = r[60].strip()
+      
+                        if not global_event_id or not source_url:
+                            continue
+      
+                        rows.append({
+                            "source_id": f"gdelt:{global_event_id}",
+                            "source_provider": "GDELT",
+                            "external_id": global_event_id,
+                            "event_type": "ARMED",
+                            "title": f"GDELT conflict event {global_event_id}",
+                            "summary": f"GDELT event code {event_code}",
+                            "event_time": (
+                                f"{event_date[:4]}-{event_date[4:6]}-{event_date[6:8]}T00:00:00Z"
+                                if len(event_date) == 8 else None
+                            ),
+                            "fatalities": 0,
+                            "injuries": 0,
+                            "source_name": "GDELT",
+                            "source_url": source_url,
+                            "source_count": 1,
+                            "confidence": 30,
+                            "status": "unverified"
+                        })
+      
+                if not rows:
+                    raise SystemExit("No GDELT rows to upload")
+      
+                data = json.dumps(rows).encode("utf-8")
+      
+                req = urllib.request.Request(
+                    supabase_url + "/rest/v1/events?on_conflict=source_id",
+                    data=data,
+                    method="POST",
+                    headers={
+                        "apikey": service_key,
+                        "Authorization": "Bearer " + service_key,
+                        "Content-Type": "application/json",
+                        "Prefer": "resolution=ignore-duplicates,return=minimal"
+                    }
+                )
+      
+                with urllib.request.urlopen(req, timeout=30) as response:
+                    print("Supabase status:", response.status)
+      
+                print("GDELT rows submitted:", len(rows))
+                PY

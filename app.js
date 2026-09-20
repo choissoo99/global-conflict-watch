@@ -8,14 +8,14 @@ async function loadEvents(){
  const res=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}});
  if(!res.ok)throw new Error("Supabase "+res.status);
  const events=await res.json();
- document.getElementById("stats").textContent="지도 사건 "+events.length+"건";
+ document.getElementById("stats").textContent="지도 사건 "+events.length+"건 · 국가 "+new Set(events.map(e=>e.country).filter(Boolean)).size+"곳";
  const feed=document.getElementById("feed"); feed.innerHTML="";
  events.forEach(e=>{
    const place=e.city||e.country||"위치 미상";
    L.circleMarker([e.latitude,e.longitude],{radius:6,weight:1,fillOpacity:.8}).addTo(map)
     .bindPopup("<b>"+esc(e.title)+"</b><br>"+esc(place)+"<br><small>"+esc(e.event_time||"")+"</small>");
    const div=document.createElement("div"); div.className="event";
-   div.innerHTML="<b>"+esc(e.title)+"</b><small>"+esc(place)+" · "+esc(e.event_type)+"</small>"; feed.appendChild(div);
+   div.innerHTML="<b>"+esc(e.title)+"</b><small>"+esc(place)+" · "+esc(e.event_type)+"</small>"; div.addEventListener("click",()=>map.setView([e.latitude,e.longitude],6)); feed.appendChild(div);
  });
 }
 loadEvents().catch(err=>{document.getElementById("stats").textContent="데이터 연결 오류";console.error(err)});

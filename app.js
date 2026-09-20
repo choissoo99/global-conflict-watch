@@ -2,7 +2,7 @@ const SUPABASE_URL="https://zshtlatitnwcovkxzftv.supabase.co";
 const SUPABASE_KEY="sb_publishable_srMFnmLm1bCg9evU_X3Blw_T9vTcQwH";
 const map=L.map("map",{worldCopyJump:true}).setView([20,0],2);
 window.eventMarkers=[];
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"&copy; OpenStreetMap"}).addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap &copy; CARTO"}).addTo(map);
 const typeLabel=t=>({ASSAULT:"공격",ARMED_ATTACK:"무장 공격",FIGHT:"무력충돌",MASS_VIOLENCE:"대규모 폭력",ARMED:"무장 사건"}[t]||t||"기타");
 const relativeTime=value=>{
  if(!value)return "시간 정보 없음";

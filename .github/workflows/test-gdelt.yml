@@ -69,8 +69,8 @@ jobs:
                   event_date = r[1].strip()
                   event_code = r[26].strip()
                   source_url = r[60].strip()
-                  country = r[51].strip() or None
-                  city = r[53].strip() or None
+                  country = r[53].strip() or None
+                  city = r[52].strip() or None
 
                   try:
                       latitude = float(r[56]) if r[56].strip() else None

@@ -6,3 +6,5 @@
 .event-marker{stroke-width:2}.event-marker.assault{stroke:#f59e0b;fill:#f59e0b}.event-marker.fight{stroke:#ef4444;fill:#ef4444}.event-marker.mass{stroke:#a855f7;fill:#a855f7}.event-marker.armed{stroke:#f97316;fill:#f97316}.event-marker.other{stroke:#94a3b8;fill:#94a3b8}
 
 .map-legend .assault-dot{color:#f59e0b}.map-legend .fight-dot{color:#ef4444}.map-legend .mass-dot{color:#a855f7}.map-legend .armed-dot{color:#f97316}@media(max-width:900px){.map-legend{flex-wrap:wrap;max-width:85%;gap:7px 10px}}
+
+#summaryCards{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#28324a;border-bottom:1px solid #28324a}#summaryCards>div{background:#11182b;padding:12px 22px}#summaryCards b{display:block;font-size:21px}#summaryCards span{font-size:12px;color:#94a3b8}main{height:calc(100vh - 137px)}@media(max-width:800px){#summaryCards{grid-template-columns:repeat(2,1fr)}main{height:auto}}

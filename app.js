@@ -1,6 +1,7 @@
 const SUPABASE_URL="https://zshtlatitnwcovkxzftv.supabase.co";
 const SUPABASE_KEY="sb_publishable_srMFnmLm1bCg9evU_X3Blw_T9vTcQwH";
-const map=L.map("map",{worldCopyJump:true}).setView([20,0],2);\nwindow.eventMarkers=[];
+const map=L.map("map",{worldCopyJump:true}).setView([20,0],2);
+window.eventMarkers=[];
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"&copy; OpenStreetMap"}).addTo(map);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function loadEvents(){

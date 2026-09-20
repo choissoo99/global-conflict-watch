@@ -45,12 +45,12 @@ jobs:
 
           test -s dedup.tsv
       - name: Upload GDELT events to Supabase
-              shell: bash
-              env:
-                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-                SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-              run: |
-                set -euo pipefail
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
       
                 python3 - <<'PY'
                 import csv

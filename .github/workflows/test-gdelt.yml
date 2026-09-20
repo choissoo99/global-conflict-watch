@@ -69,6 +69,8 @@ jobs:
                   event_date = r[1].strip()
                   event_code = r[26].strip()
                   source_url = r[60].strip()
+                  root_code = r[28].strip()
+                  event_type = {"18": "ASSAULT", "19": "FIGHT", "20": "MASS_VIOLENCE"}.get(root_code, "ARMED")
                   country = r[53].strip() or None
                   city = r[52].strip() or None
 

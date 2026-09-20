@@ -3,3 +3,4 @@
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.filters select{width:100%;padding:9px;background:#0b1020;color:#e8edf7;border:1px solid #334155;border-radius:6px}
 #detail{margin:8px 0 14px;padding:12px;background:#0b1020;border:1px solid #28324a;border-radius:8px}#detail p{margin:7px 0 0;color:#94a3b8;font-size:13px}
 #map{position:relative}.map-legend{position:absolute;z-index:500;left:12px;bottom:24px;display:flex;gap:12px;align-items:center;padding:9px 12px;background:rgba(11,16,32,.88);border:1px solid #334155;border-radius:8px;font-size:12px}.map-legend span{color:#cbd5e1}
+.event-marker{stroke-width:2}.event-marker.assault{stroke:#f59e0b;fill:#f59e0b}.event-marker.fight{stroke:#ef4444;fill:#ef4444}.event-marker.mass{stroke:#a855f7;fill:#a855f7}.event-marker.armed{stroke:#f97316;fill:#f97316}.event-marker.other{stroke:#94a3b8;fill:#94a3b8}

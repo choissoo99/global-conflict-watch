@@ -86,7 +86,7 @@ jobs:
                       "source_id": f"gdelt:{global_event_id}",
                       "source_provider": "GDELT",
                       "external_id": global_event_id,
-                      "event_type": "ARMED",
+                      "event_type": event_type,
                       "title": f"GDELT conflict event {global_event_id}",
                       "summary": f"GDELT event code {event_code}",
                       "country": country,

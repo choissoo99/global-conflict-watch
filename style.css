@@ -4,3 +4,5 @@
 #detail{margin:8px 0 14px;padding:12px;background:#0b1020;border:1px solid #28324a;border-radius:8px}#detail p{margin:7px 0 0;color:#94a3b8;font-size:13px}
 #map{position:relative}.map-legend{position:absolute;z-index:500;left:12px;bottom:24px;display:flex;gap:12px;align-items:center;padding:9px 12px;background:rgba(11,16,32,.88);border:1px solid #334155;border-radius:8px;font-size:12px}.map-legend span{color:#cbd5e1}
 .event-marker{stroke-width:2}.event-marker.assault{stroke:#f59e0b;fill:#f59e0b}.event-marker.fight{stroke:#ef4444;fill:#ef4444}.event-marker.mass{stroke:#a855f7;fill:#a855f7}.event-marker.armed{stroke:#f97316;fill:#f97316}.event-marker.other{stroke:#94a3b8;fill:#94a3b8}
+
+.map-legend .assault-dot{color:#f59e0b}.map-legend .fight-dot{color:#ef4444}.map-legend .mass-dot{color:#a855f7}.map-legend .armed-dot{color:#f97316}@media(max-width:900px){.map-legend{flex-wrap:wrap;max-width:85%;gap:7px 10px}}

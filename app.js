@@ -3,7 +3,7 @@ const SUPABASE_KEY="sb_publishable_srMFnmLm1bCg9evU_X3Blw_T9vTcQwH";
 const map=L.map("map",{worldCopyJump:true}).setView([20,0],2);
 window.eventMarkers=[];
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"&copy; OpenStreetMap"}).addTo(map);
-const typeLabel=t=>({ASSAULT:"공격",FIGHT:"무력충돌",MASS_VIOLENCE:"대규모 폭력",ARMED:"무장 사건"}[t]||t||"기타");
+const typeLabel=t=>({ASSAULT:"공격",ARMED_ATTACK:"무장 공격",FIGHT:"무력충돌",MASS_VIOLENCE:"대규모 폭력",ARMED:"무장 사건"}[t]||t||"기타");
 const relativeTime=value=>{
  if(!value)return "시간 정보 없음";
  const ms=Date.now()-new Date(value).getTime();
@@ -22,7 +22,7 @@ const displayTitle=e=>{
  const label=typeLabel(e.event_type);
  return e.title&& !e.title.startsWith("GDELT conflict event") ? e.title : place+" · "+label;
 };
-const markerClass=t=>({ASSAULT:"assault",FIGHT:"fight",MASS_VIOLENCE:"mass",ARMED:"armed"}[t]||"other");
+const markerClass=t=>({ASSAULT:"assault",ARMED_ATTACK:"armed-attack",FIGHT:"fight",MASS_VIOLENCE:"mass",ARMED:"armed"}[t]||"other");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function loadEvents(){
  const url=SUPABASE_URL+"/rest/v1/events?select=id,event_type,title,country,city,latitude,longitude,event_time,status,source_url&latitude=not.is.null&longitude=not.is.null&order=event_time.desc&limit=200";

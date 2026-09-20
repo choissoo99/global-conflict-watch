@@ -23,7 +23,8 @@ jobs:
             "https://data.gdeltproject.org/gdeltv2/lastupdate.txt" \
             --output lastupdate.txt
 
-          EVENT_URL="$(awk '/export\\.CSV\\.zip/ {print $3; exit}' lastupdate.txt)"
+          EVENT_URL="$(awk '/export[.]CSV[.]zip/ {print $3; exit}' lastupdate.txt)"
+          echo "Latest GDELT event file: $EVENT_URL"
           test -n "$EVENT_URL"
 
           curl --fail --show-error --location --max-time 60 \

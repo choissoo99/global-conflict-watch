@@ -10,3 +10,5 @@
 #summaryCards{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#28324a;border-bottom:1px solid #28324a}#summaryCards>div{background:#11182b;padding:12px 22px}#summaryCards b{display:block;font-size:21px}#summaryCards span{font-size:12px;color:#94a3b8}main{height:calc(100vh - 137px)}@media(max-width:800px){#summaryCards{grid-template-columns:repeat(2,1fr)}main{height:auto}}
 
 .event-marker.armed-attack{stroke:#dc2626;fill:#dc2626}
+
+.map-legend .armed-attack-dot{color:#dc2626}

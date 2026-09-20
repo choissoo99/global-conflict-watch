@@ -15,7 +15,7 @@ async function loadEvents(){
    const place=e.city||e.country||"위치 미상";
    L.circleMarker([e.latitude,e.longitude],{radius:6,weight:1,fillOpacity:.8}).addTo(map)
     .bindPopup("<b>"+esc(e.title)+"</b><br>"+esc(place)+"<br><small>"+esc(e.event_time||"")+"</small>");
-   const div=document.createElement("div"); div.className="event";
+   const div=document.createElement("div"); div.className="event"; div.eventData=e;
    div.innerHTML="<b>"+esc(e.title)+"</b><small>"+esc(place)+" · "+esc(e.event_type)+"</small>"; div.addEventListener("click",()=>map.setView([e.latitude,e.longitude],6)); feed.appendChild(div);
  });
 }

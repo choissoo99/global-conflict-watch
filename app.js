@@ -41,6 +41,7 @@ async function loadEvents(){
    L.circleMarker([e.latitude,e.longitude],{radius:6,weight:1,fillOpacity:.8}).addTo(map)
     .bindPopup("<b>"+esc(displayTitle(e))+"</b><br>"+esc(place)+"<br><small>"+esc(e.event_time||"")+"</small>");
    const div=document.createElement("div"); div.className="event"; div.eventData=e;
+   div.dataset.country=e.country||""; div.dataset.type=e.event_type||"";
    div.innerHTML="<b>"+esc(displayTitle(e))+"</b><small>"+esc(place)+" · "+esc(typeLabel(e.event_type))+" · "+esc(relativeTime(e.event_time))+"</small>"; div.addEventListener("click",()=>map.setView([e.latitude,e.longitude],6)); feed.appendChild(div);
  });
 }

@@ -29,7 +29,12 @@ async function loadEvents(){
  const res=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}});
  if(!res.ok)throw new Error("Supabase "+res.status);
  const events=await res.json();
- document.getElementById("stats").textContent="지도 사건 "+events.length+"건 · 국가 "+new Set(events.map(e=>e.country).filter(Boolean)).size+"곳";
+ const countries=new Set(events.map(e=>e.country).filter(Boolean)).size;
+ document.getElementById("stats").textContent="지도 사건 "+events.length+"건 · 국가 "+countries+"곳";
+ document.getElementById("totalCount").textContent=events.length;
+ document.getElementById("countryCount").textContent=countries;
+ document.getElementById("fightCount").textContent=events.filter(e=>e.event_type==="FIGHT").length;
+ document.getElementById("violenceCount").textContent=events.filter(e=>e.event_type==="MASS_VIOLENCE").length;
  const feed=document.getElementById("feed"); feed.innerHTML="";
  events.forEach(e=>{
    const place=e.city||e.country||"위치 미상";
